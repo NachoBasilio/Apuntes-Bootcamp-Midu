@@ -2,7 +2,7 @@ import PropTypes from 'prop-types'
 
 export default function Total({total}) {
     const cantidad = total.reduce((accumulator, currentValue) => {
-        return accumulator + currentValue;
+        return accumulator + currentValue.exercises;
     }, 0);
       
   return (
