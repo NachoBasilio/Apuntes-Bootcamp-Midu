@@ -1,13 +1,12 @@
 import './App.css'
+import Mensaje from './components/Mensaje'
 
-const Mensaje = () => {
-  return <h1>Bueeeeenas</h1>
-}
+
 
 function App() {
   return (
     <>
-      <Mensaje/>
+      <Mensaje mensaje={"Aqui desde app"}/>
     </>
   )
 }
