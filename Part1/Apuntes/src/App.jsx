@@ -8,7 +8,8 @@ function App() {
   // const [right, setRight] = useState(0)
   const [counters, setCounters] = useState({
     left: 0,
-    right: 0
+    right: 0,
+    total: 0
   })
 
 
@@ -16,12 +17,14 @@ function App() {
     if(lado === "left"){
       setCounters({
         ...counters,
-        left: counters.left + 1
+        left: counters.left + 1,
+        total: counters.total + 1
       })
     }else{
       setCounters({
         ...counters,
-        right: counters.right + 1
+        right: counters.right + 1,
+        total: counters.total + 1
       })
     }
   }
@@ -44,6 +47,9 @@ function App() {
       </button>
       {counters.right}
 
+      <div>
+        <p>Cliks totales {counters.total}</p>
+      </div>
     </>
   )
 }
