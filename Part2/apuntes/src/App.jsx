@@ -26,12 +26,16 @@ const App = () => {
   const [notes, setNotes] = useState(initialNotes)
   const [newNote, setNewNote] = useState('')
   const [important, setImportant] = useState(false)
+  const [filter, setFilter] = useState(true)
 
   const handleChangeText = (e) => {
     setNewNote(e.target.value)
   }
   const handleChangeImp = (e) => {
     setImportant(e.target.checked)
+  }
+  const handlerFilter = () =>{
+    setFilter(prevValue => !prevValue)
   }
 
   const handleSubmit = (e) => {
@@ -54,11 +58,21 @@ const App = () => {
   return (
     <div>
       <h1>Notes</h1>
+      <button
+      onClick={handlerFilter}
+      >Muestra todos</button>
       <ol>
         {
-          notes.map(note => (
-            <Note key={note.id} {...note}></Note>
-          ))
+          filter ?
+          notes.map(note => 
+            (note.important ? 
+            <Note key={note.id} {...note}></Note> :
+            ""
+            )
+          ) :
+          notes.map(note => 
+            <Note key={note.id} {...note}></Note> 
+          )
         }
       </ol>
       <form onSubmit={(e)=>{handleSubmit(e)}}>
