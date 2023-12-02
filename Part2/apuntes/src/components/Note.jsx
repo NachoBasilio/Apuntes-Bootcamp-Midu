@@ -12,7 +12,7 @@ export default function Note({important, content, date}) {
 
 
 Note.propTypes = {
-    important: PropTypes.string.isRequired,
+    important: PropTypes.bool.isRequired,
     content: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
 }
