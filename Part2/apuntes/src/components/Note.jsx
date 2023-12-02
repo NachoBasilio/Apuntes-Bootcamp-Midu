@@ -1,16 +1,18 @@
 import PropTypes from 'prop-types';
 
 
-export default function Note({note}) {
+export default function Note({important, content, date}) {
   return (
-    <div className={note.important ? "red" : "green"}>
-        <h3>{note.content}</h3>
-        <time>{note.date}</time>
+    <div className={important ? "red" : "green"}>
+        <h3>{content}</h3>
+        <time>{date}</time>
     </div>
   )
 }
 
 
 Note.propTypes = {
-    note: PropTypes.object.isRequired
+    important: PropTypes.string.isRequired,
+    content: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
 }

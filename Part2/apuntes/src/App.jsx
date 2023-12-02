@@ -28,7 +28,7 @@ const App = () => {
     <div>
       <h1>Notes</h1>
       {
-        notes.map(note => <Note key={note.id} note={note}></Note>)
+        notes.map(note => <Note key={note.id} {...note}></Note>)
       }
     </div>
   )
