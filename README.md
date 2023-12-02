@@ -10,4 +10,4 @@ MiduDev es un instructor y desarrollador con experiencia que ofrece contenido ed
 
 - **30/11/23:** Inicié con el primer capítulo, centrado en teoría.
 - **31/11/23:** Avancé a través de la primera hora de la segunda clase.
-- **01/12/23:** Completé la primera clase.
+- **01/12/23:** Completé la segunda y tercer clase.
