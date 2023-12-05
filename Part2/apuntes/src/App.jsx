@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react"
 import Note from "./components/Note"
 
-import axios from "axios"
+import getAllNotes from "./hellpers/getAllNotes"
+import createNote from "./hellpers/createNote"
 
 
 
@@ -12,12 +13,13 @@ const App = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    setLoading(true)
-    axios.get("https://jsonplaceholder.typicode.com/posts")
-    .then(json => {
-      setNotes(json.data)
+    getAllNotes()
+    .then(notes =>{
+      setNotes(notes)
       setLoading(false)
     })
+
+   
   }, [])
   
 
@@ -30,18 +32,23 @@ const App = () => {
   }
   const handleSubmit = (e) => {
     e.preventDefault()
-    setNotes([
-      ...notes,
-      {
-        id: notes.length + 1,
-        title: title,
-        body: newNote,
 
-      },
-    ]);
-    // Reinicia el estado del input de la nota y del checkbox
-    setNewNote('');
-    setTitle('');
+    const noteToAddToState = {
+      title: title,
+      body: newNote,
+      userID:2
+    }
+
+    createNote(noteToAddToState)
+    .then(data => {
+      setNotes(prevValue => prevValue.concat(data))
+      setNewNote('');
+      setTitle('');
+    })
+    .catch(error => {
+      console.error("Error al crear la nota:", error);
+    });
+
   };
 
 
