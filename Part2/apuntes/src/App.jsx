@@ -2,22 +2,10 @@ import { useState } from "react"
 import Note from "./components/Note"
 const initialNotes = [
   {
+    userId: 1,
     id: 1,
-    content: 'HTML is easy',
-    date: '2019-05-30T17:30:31.098Z',
-    important: true,
-  },
-  {
-    id: 2,
-    content: 'Browser can execute only JavaScript',
-    date: '2019-05-30T18:39:34.091Z',
-    important: false,
-  },
-  {
-    id: 3,
-    content: 'GET and POST are the most important methods of HTTP protocol',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true,
+    title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
+    body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
   },
 ]
 
@@ -25,54 +13,41 @@ const initialNotes = [
 const App = () => {
   const [notes, setNotes] = useState(initialNotes)
   const [newNote, setNewNote] = useState('')
-  const [important, setImportant] = useState(false)
-  const [filter, setFilter] = useState(true)
+  const [title, setTitle] = useState("")
 
   const handleChangeText = (e) => {
     setNewNote(e.target.value)
   }
   const handleChangeImp = (e) => {
-    setImportant(e.target.checked)
+    setTitle(e.target.value)
   }
-  const handlerFilter = () =>{
-    setFilter(prevValue => !prevValue)
-  }
+
 
   const handleSubmit = (e) => {
     e.preventDefault()
-    const fecha = new Date();
     setNotes([
       ...notes,
       {
         id: notes.length + 1,
-        date: fecha.toISOString(),
-        content: newNote,
-        important: important,
+        body: newNote,
+
       },
     ]);
     // Reinicia el estado del input de la nota y del checkbox
     setNewNote('');
-    setImportant(false);
+    setTitle('');
   };
 
   return (
     <div>
       <h1>Notes</h1>
-      <button
-      onClick={handlerFilter}
-      >Muestra todos</button>
       <ol>
         {
-          filter ?
           notes.map(note => 
-            (note.important ? 
-            <Note key={note.id} {...note}></Note> :
-            ""
-            )
-          ) :
-          notes.map(note => 
+            ( 
             <Note key={note.id} {...note}></Note> 
-          )
+            )
+          ) 
         }
       </ol>
       <form onSubmit={(e)=>{handleSubmit(e)}}>
@@ -82,12 +57,12 @@ const App = () => {
           value={newNote}
           />
           <input 
-          id="Checkbox" 
-          type="checkbox" 
+          id="titulo" 
+          type="text" 
           onChange={handleChangeImp}
-          checked={important}
+          value={title}
           /> 
-          <label htmlFor="Checkbox">¿Es importante?</label>
+          <label htmlFor="titulo">¿Cual es el titulo?</label>
           <button>Create Note</button>
         </form>
     </div>
