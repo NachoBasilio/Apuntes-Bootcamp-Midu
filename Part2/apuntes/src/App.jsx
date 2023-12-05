@@ -1,19 +1,25 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Note from "./components/Note"
-const initialNotes = [
-  {
-    userId: 1,
-    id: 1,
-    title: "sunt aut facere repellat provident occaecati excepturi optio reprehenderit",
-    body: "quia et suscipit\nsuscipit recusandae consequuntur expedita et cum\nreprehenderit molestiae ut ut quas totam\nnostrum rerum est autem sunt rem eveniet architecto"
-  },
-]
+
 
 
 const App = () => {
-  const [notes, setNotes] = useState(initialNotes)
+  const [notes, setNotes] = useState([])
   const [newNote, setNewNote] = useState('')
   const [title, setTitle] = useState("")
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    fetch("https://jsonplaceholder.typicode.com/posts")
+    .then(response => response.json())
+    .then(json => {
+      setNotes(json)
+      setLoading(false)
+    })
+  }, [])
+  
+
 
   const handleChangeText = (e) => {
     setNewNote(e.target.value)
@@ -21,14 +27,13 @@ const App = () => {
   const handleChangeImp = (e) => {
     setTitle(e.target.value)
   }
-
-
   const handleSubmit = (e) => {
     e.preventDefault()
     setNotes([
       ...notes,
       {
         id: notes.length + 1,
+        title: title,
         body: newNote,
 
       },
@@ -38,11 +43,14 @@ const App = () => {
     setTitle('');
   };
 
+
   return (
     <div>
       <h1>Notes</h1>
       <ol>
         {
+          loading ? 
+          (<h1>Cargando notas...</h1>):
           notes.map(note => 
             ( 
             <Note key={note.id} {...note}></Note> 
@@ -51,18 +59,22 @@ const App = () => {
         }
       </ol>
       <form onSubmit={(e)=>{handleSubmit(e)}}>
-          <input 
-          type="text" 
-          onChange={handleChangeText}
-          value={newNote}
-          />
+          <label htmlFor="titulo">¿Cual es el titulo?</label>
           <input 
           id="titulo" 
           type="text" 
           onChange={handleChangeImp}
           value={title}
           /> 
-          <label htmlFor="titulo">¿Cual es el titulo?</label>
+          <label htmlFor="titulo">¿Cual es el body?</label>
+    
+          <input 
+          type="text" 
+          id="body"
+          onChange={handleChangeText}
+          value={newNote}
+          />
+
           <button>Create Note</button>
         </form>
     </div>

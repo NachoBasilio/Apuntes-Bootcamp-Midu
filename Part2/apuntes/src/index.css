@@ -5,3 +5,11 @@
 .green {
   background-color: green;
 }
+
+input {
+  margin-left: 5px;
+}
+
+label{
+  margin-left: 5px;
+}

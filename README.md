@@ -12,3 +12,4 @@ MiduDev es un instructor y desarrollador con experiencia que ofrece contenido ed
 - **31/11/23:** Avancé a través de la primera hora de la segunda clase.
 - **01/12/23:** Completé la segunda y tercer clase.date
 - **02/12/23:** Renderizar listas de elementos y formularios 
+- **05/12/23:** Fetch, useEffect y un poquito mas.
