@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import Note from "./components/Note"
 
+import axios from "axios"
+
 
 
 const App = () => {
@@ -11,10 +13,9 @@ const App = () => {
 
   useEffect(() => {
     setLoading(true)
-    fetch("https://jsonplaceholder.typicode.com/posts")
-    .then(response => response.json())
+    axios.get("https://jsonplaceholder.typicode.com/posts")
     .then(json => {
-      setNotes(json)
+      setNotes(json.data)
       setLoading(false)
     })
   }, [])
