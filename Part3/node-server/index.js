@@ -1,6 +1,7 @@
 const express = require("express")
 const app = express()
 
+app.use(express.json())
 let notes = [
     {
       id: 1,
@@ -47,6 +48,31 @@ app.get('/api/notes/:id', (request, response) => {
     }
 })
 
+app.delete('/api/notes/:id', (request, response) => {
+    const id = request.params.id
+    notes = notes.filter(note => note.id !== parseInt(id))
+
+    response.status(204).end()
+})
+
+app.post('/api/notes', (request, response) => {
+    const note = request.body
+    if(note.important === "true"){
+        note.important = true
+    }else{
+        note.important =false
+    }
+    const newNote = {
+        id: notes.length + 1,
+        date: new Date().toISOString(),
+        content: note.content,
+        important: note.important 
+    }
+
+    notes = [...notes, newNote]
+
+    response.json(notes)
+})
 
 const PORT = 3001
 
