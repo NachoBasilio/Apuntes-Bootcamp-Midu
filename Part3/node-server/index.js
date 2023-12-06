@@ -62,8 +62,13 @@ app.post('/api/notes', (request, response) => {
     }else{
         note.important =false
     }
+
+    const ids = notes.map(note => note.id)
+    const maxId = Math.max(...ids)
+
+    //Lo del length no es la mejor opción
     const newNote = {
-        id: notes.length + 1,
+        id: maxId +1,
         date: new Date().toISOString(),
         content: note.content,
         important: note.important 
@@ -71,7 +76,7 @@ app.post('/api/notes', (request, response) => {
 
     notes = [...notes, newNote]
 
-    response.json(notes)
+    response.status(201).json(notes)
 })
 
 const PORT = 3001
