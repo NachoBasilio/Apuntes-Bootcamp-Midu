@@ -13,6 +13,10 @@
     "express": "4.18.2"
   },
   "devDependencies": {
-    "eslint": "^8.55.0"
+    "standard": "16.0.3"
+  },
+  "eslintConfig": {
+    "extends": "./node_modules/standard/eslintrc.json"
   }
 }
+
