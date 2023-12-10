@@ -1,4 +1,5 @@
 const express = require('express')
+require('dotenv').config()
 const app = express()
 const cors = require('cors')
 const logger = require('./loggerMiddleware')
@@ -81,7 +82,7 @@ app.use((request, response) => {
   })
 })
 
-const PORT = 3001
+const PORT = process.env.PORT || 3001
 
 app.listen(PORT, () => {
   console.log(`Server corriendo en el puerto ${PORT}`)
