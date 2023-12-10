@@ -3,35 +3,18 @@ const app = express()
 const cors = require('cors')
 const logger = require('./loggerMiddleware')
 
+// Conexión con la base de datos
+require('./mongo')
+
+const Note = require('./models/Notes')
+
 app.use(cors())
 app.use(express.json())
 // Un middleware es una función que intercepta la petición que está atravesando tu API, permitiéndote realizar operaciones o aplicar lógica específica antes de que la solicitud alcance su destino final. Estas funciones juegan un papel crucial en la manipulación y el procesamiento de las solicitudes HTTP, ofreciendo un punto de intervención para personalizar el comportamiento de tu aplicación.
 
 app.use(logger)
 
-let notes = [
-  {
-    id: 1,
-    title: 'Estudia',
-    body: 'HTML is easy',
-    date: '2019-05-30T17:30:31.098Z',
-    important: true
-  },
-  {
-    id: 2,
-    title: 'Estudia',
-    body: 'Browser can execute only Javascript',
-    date: '2019-05-30T18:39:34.091Z',
-    importan: false
-  },
-  {
-    id: 3,
-    title: 'Estudia',
-    body: 'GET and POST are the most important methods of HTTP protocol',
-    date: '2019-05-30T19:20:14.298Z',
-    important: true
-  }
-]
+let notes = []
 
 // const app = http.createServer((request, response) =>{
 //     response.writeHead(200,{'Content-Type': 'application/json'})
@@ -43,7 +26,9 @@ app.get('/', (request, response) => {
 })
 
 app.get('/api/notes', (request, response) => {
-  response.json(notes)
+  Note.find({}).then(notes => {
+    response.json(notes)
+  })
 })
 
 app.get('/api/notes/:id', (request, response) => {
