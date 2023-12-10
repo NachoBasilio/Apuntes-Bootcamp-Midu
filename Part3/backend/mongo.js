@@ -27,3 +27,10 @@ const note = new Note({
 })
 
 note.save()
+  .then(result => {
+    console.log(result)
+    mongoose.connection.close()
+  })
+  .catch(error => {
+    console.error(error)
+  })
