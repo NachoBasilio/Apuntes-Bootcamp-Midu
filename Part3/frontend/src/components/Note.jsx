@@ -17,5 +17,5 @@ export default function Note({title, body, id}) {
 Note.propTypes = {
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
-    id: PropTypes.number.isRequired,
+    id: PropTypes.string.isRequired,
 }
