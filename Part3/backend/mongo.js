@@ -9,3 +9,21 @@ mongoose.connect(connectionString)
   }).catch(err => {
     console.error(err)
   })
+
+const noteSchema = new mongoose.Schema({
+  title: String,
+  date: Date,
+  important: String,
+  body: String
+})
+
+const Note = mongoose.model('Note', noteSchema)
+
+const note = new Note({
+  title: 'Aguanten los pokemon',
+  important: true,
+  body: 'Los pokemon son lo mas',
+  date: new Date()
+})
+
+note.save()
