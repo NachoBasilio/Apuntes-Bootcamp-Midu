@@ -26,11 +26,17 @@ const note = new Note({
   date: new Date()
 })
 
-note.save()
-  .then(result => {
-    console.log(result)
-    mongoose.connection.close()
-  })
-  .catch(error => {
-    console.error(error)
-  })
+// Vamos a ver que tiene adentro
+Note.find({}).then(results => {
+  console.log(results)
+  mongoose.connection.close()
+})
+
+// note.save()
+//   .then(result => {
+//     console.log(result)
+//     mongoose.connection.close()
+//   })
+//   .catch(error => {
+//     console.error(error)
+//   })
