@@ -13,5 +13,7 @@ MiduDev es un instructor y desarrollador con experiencia que ofrece contenido ed
 - **01/12/23:** Completé la segunda y tercer clase.date
 - **02/12/23:** Renderizar listas de elementos y formularios 
 - **05/12/23:** Fetch, useEffect y un poquito mas.
-- **06/12/23:** Creando la primer api
-- **07/12/23:** Solucione CORS y aplique un linter, tambien se conecto el backend con el front
+- **06/12/23:** Creando la primer api.
+- **07/12/23:** Solucione CORS y aplique un linter, tambien se conecto el backend con el front.
+- **08/12/23:** Aprendi sobre Mongo.
+- **09/12/23:** Conecte la base de datos al backend.

@@ -1,5 +1,5 @@
-const express = require('express')
 require('dotenv').config()
+const express = require('express')
 const app = express()
 const cors = require('cors')
 const logger = require('./loggerMiddleware')
@@ -14,8 +14,6 @@ app.use(express.json())
 // Un middleware es una función que intercepta la petición que está atravesando tu API, permitiéndote realizar operaciones o aplicar lógica específica antes de que la solicitud alcance su destino final. Estas funciones juegan un papel crucial en la manipulación y el procesamiento de las solicitudes HTTP, ofreciendo un punto de intervención para personalizar el comportamiento de tu aplicación.
 
 app.use(logger)
-
-let notes = []
 
 // const app = http.createServer((request, response) =>{
 //     response.writeHead(200,{'Content-Type': 'application/json'})
@@ -32,23 +30,50 @@ app.get('/api/notes', (request, response) => {
   })
 })
 
-app.get('/api/notes/:id', (request, response) => {
+app.get('/api/notes/:id', (request, response, next) => {
   const id = request.params.id
 
-  const note = notes.find(note => note.id === parseInt(id))
-
-  if (note) {
-    response.json(note)
-  } else {
-    response.status(404).end()
-  }
+  Note.findById(id).then(note => {
+    if (note) {
+      response.json(note)
+    } else {
+      response.status(404).end()
+    }
+  }).catch(err => {
+    next(err)
+  })
 })
 
-app.delete('/api/notes/:id', (request, response) => {
+app.put('/api/notes/:id', (request, response, next) => {
   const id = request.params.id
-  notes = notes.filter(note => note.id !== parseInt(id))
+  const note = request.body
 
-  response.status(204).end()
+  const newNoteInfo = new Note({
+    title: note.title,
+    body: note.body,
+    date: new Date(),
+    important: note.important
+  })
+
+  Note.findByIdAndUpdate(id, newNoteInfo, { new: true }).then(note => {
+    if (note) {
+      response.status(200).json(note)
+    } else {
+      response.status(404).end()
+    }
+  }).catch(err => {
+    next(err)
+  })
+})
+
+app.delete('/api/notes/:id', (request, response, next) => {
+  const id = request.params.id
+
+  Note.findByIdAndDelete(id).then(result => {
+    response.status(204).end()
+  }).catch(err => {
+    next(err)
+  })
 })
 
 app.post('/api/notes', (request, response) => {
@@ -59,27 +84,30 @@ app.post('/api/notes', (request, response) => {
     note.important = false
   }
 
-  const ids = notes.map(note => note.id)
-  const maxId = Math.max(...ids)
-
-  // Lo del length no es la mejor opción
-  const newNote = {
-    id: maxId + 1,
-    date: new Date().toISOString(),
+  const newNote = new Note({
     title: note.title,
     body: note.body,
+    date: new Date(),
     important: note.important
-  }
+  })
 
-  notes = [...notes, newNote]
-
-  response.status(201).json(notes)
+  newNote.save().then(savedNote => {
+    response.status(201).json(savedNote)
+  })
 })
 
 app.use((request, response) => {
   response.status(404).json({
     error: 'Not found'
   })
+})
+
+app.use((error, request, response, next) => {
+  console.log(error.name)
+  if (error.name === 'CastError') {
+    response.status(400).send({ error: 'id used is bad' })
+  }
+  response.status(500).send({ error: 'Generic' })
 })
 
 const PORT = process.env.PORT || 3001

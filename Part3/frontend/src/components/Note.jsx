@@ -1,12 +1,10 @@
 import PropTypes from 'prop-types';
 
 
-export default function Note({title, body, id}) {
+export default function Note({title, body}) {
   return (
     <div>
-        <h4>
-        {id}
-        </h4>
+
         <h3>{title}</h3>
         <p>{body}</p>
     </div>
@@ -17,5 +15,5 @@ export default function Note({title, body, id}) {
 Note.propTypes = {
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
-    id: PropTypes.string.isRequired,
+
 }

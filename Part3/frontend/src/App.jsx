@@ -13,14 +13,12 @@ const App = () => {
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    getAllNotes()
-    .then(notes =>{
-      setNotes(notes)
-      setLoading(false)
-    })
-
-   
-  }, [])
+    getAllNotes().then((notes) => {
+      setNotes(notes);
+      setLoading(false);
+    });
+  }, []); // Dejar el array de dependencias vacío
+  
   
 
 
@@ -30,26 +28,28 @@ const App = () => {
   const handleChangeImp = (e) => {
     setTitle(e.target.value)
   }
-  const handleSubmit = (e) => {
-    e.preventDefault()
 
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  
     const noteToAddToState = {
       title: title,
       body: newNote,
-      important: "true"
-    }
-
+      important: "true",
+    };
+  
     createNote(noteToAddToState)
-    .then(data => {
-      setNotes(data)
-      setNewNote('');
-      setTitle('');
-    })
-    .catch(error => {
-      console.error("Error al crear la nota:", error);
-    });
-
+      .then(() => {
+        // Actualizar el estado aquí sin realizar una nueva llamada a getAllNotes
+        setNotes((prevNotes) => [...prevNotes, noteToAddToState]);
+        setNewNote("");
+        setTitle("");
+      })
+      .catch((error) => {
+        console.error("Error al crear la nota:", error);
+      });
   };
+  
 
 
   return (
