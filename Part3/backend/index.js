@@ -8,6 +8,8 @@ const logger = require('./loggerMiddleware')
 require('./mongo')
 
 const Note = require('./models/Notes')
+const notFound = require('./middleware/notFound')
+const handleErrors = require('./middleware/handleErrors')
 
 app.use(cors())
 app.use(express.json())
@@ -76,7 +78,7 @@ app.delete('/api/notes/:id', (request, response, next) => {
   })
 })
 
-app.post('/api/notes', (request, response) => {
+app.post('/api/notes', (request, response, next) => {
   const note = request.body
   if (note.important === 'true') {
     note.important = true
@@ -93,22 +95,13 @@ app.post('/api/notes', (request, response) => {
 
   newNote.save().then(savedNote => {
     response.status(201).json(savedNote)
+  }).catch(err => {
+    next(err)
   })
 })
 
-app.use((request, response) => {
-  response.status(404).json({
-    error: 'Not found'
-  })
-})
-
-app.use((error, request, response, next) => {
-  console.log(error.name)
-  if (error.name === 'CastError') {
-    response.status(400).send({ error: 'id used is bad' })
-  }
-  response.status(500).send({ error: 'Generic' })
-})
+app.use(notFound)
+app.use(handleErrors)
 
 const PORT = process.env.PORT || 3001
 

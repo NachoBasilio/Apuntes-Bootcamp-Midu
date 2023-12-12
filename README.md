@@ -17,3 +17,4 @@ MiduDev es un instructor y desarrollador con experiencia que ofrece contenido ed
 - **07/12/23:** Solucione CORS y aplique un linter, tambien se conecto el backend con el front.
 - **08/12/23:** Aprendi sobre Mongo.
 - **09/12/23:** Conecte la base de datos al backend.
+- **12/12/23:** Cree una carpeta para los middlewares.
