@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon index.js",
-    "test":"jest --verbose",
+    "test": "jest --verbose",
     "start": "NODE_ENV=production node index.js",
     "lint": "NODE_ENV=test npm run lint"
   },
@@ -20,15 +20,16 @@
   },
   "devDependencies": {
     "jest": "^29.7.0",
-    "standard": "16.0.3"
+    "standard": "16.0.3",
+    "supertest": "^6.3.3"
   },
   "eslintConfig": {
     "extends": "./node_modules/standard/eslintrc.json",
     "env": {
-      "jest":true
+      "jest": true
     }
   },
-  "jest":{
+  "jest": {
     "testEnvironment": "node"
   }
 }
