@@ -18,3 +18,5 @@ MiduDev es un instructor y desarrollador con experiencia que ofrece contenido ed
 - **08/12/23:** Aprendi sobre Mongo.
 - **09/12/23:** Conecte la base de datos al backend.
 - **12/12/23:** Cree una carpeta para los middlewares.
+- **13/12/23:** Comenzamos con testing.
+- **16/12/23:** Super testing para node.
