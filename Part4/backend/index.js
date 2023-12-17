@@ -105,8 +105,8 @@ app.use(handleErrors)
 
 const PORT = process.env.PORT || 3001
 
-app.listen(PORT, () => {
+const server = app.listen(PORT, () => {
   console.log(`Server corriendo en el puerto ${PORT}`)
 })
 
-module.exports = app
+module.exports = { app, server }

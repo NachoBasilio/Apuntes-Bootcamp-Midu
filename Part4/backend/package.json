@@ -5,9 +5,10 @@
   "main": "index.js",
   "scripts": {
     "dev": "NODE_ENV=development nodemon index.js",
-    "test": "jest --verbose",
+    "test": "NODE_ENV=test jest --verbose --silent --detectOpenHandles",
+    "test:watch": "npm run test -- --watch",
     "start": "NODE_ENV=production node index.js",
-    "lint": "NODE_ENV=test npm run lint"
+    "lint": "npm run lint"
   },
   "keywords": [],
   "author": "",

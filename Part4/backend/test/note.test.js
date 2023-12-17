@@ -1,5 +1,6 @@
 const supertest = require('supertest')
-const app = require('../index')
+const { app, server } = require('../index')
+const { default: mongoose } = require('mongoose')
 
 const api = supertest(app)
 
@@ -8,4 +9,9 @@ test('las notas se devuelven en json', async () => {
     .get('/api/notes')
     .expect(200)
     .expect('Content-Type', /application\/json/)
+})
+
+afterAll(() => {
+  mongoose.connection.close()
+  server.close()
 })
