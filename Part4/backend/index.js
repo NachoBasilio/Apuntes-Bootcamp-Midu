@@ -67,14 +67,20 @@ app.put('/api/notes/:id', (request, response, next) => {
   })
 })
 
-app.delete('/api/notes/:id', (request, response, next) => {
+app.delete('/api/notes/:id', async (request, response, next) => {
   const id = request.params.id
 
-  Note.findByIdAndDelete(id).then(result => {
+  // Note.findByIdAndDelete(id).then(result => {
+  //   response.status(204).end()
+  // }).catch(err => {
+  //   next(err)
+  // })
+  try {
+    await Note.findByIdAndDelete(id)
     response.status(204).end()
-  }).catch(err => {
+  } catch (err) {
     next(err)
-  })
+  }
 })
 
 app.post('/api/notes', async (request, response, next) => {

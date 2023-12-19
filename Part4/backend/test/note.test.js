@@ -65,6 +65,15 @@ test('a note can be delete', async () => {
   expect(response.body).toHaveLength(initialNotes.length - 1)
 })
 
+test('a note that do not exist can not be delete', async () => {
+  await api
+    .delete('/api/notes/3232')
+    .expect(400)
+
+  const { response } = await getAllTitlesFromNotes()
+  expect(response.body).toHaveLength(initialNotes.length)
+})
+
 afterAll(() => {
   mongoose.connection.close()
   server.close()
