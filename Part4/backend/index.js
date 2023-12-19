@@ -26,10 +26,9 @@ app.get('/', (request, response) => {
   response.send('<h1>Hola mundo</h1>')
 })
 
-app.get('/api/notes', (request, response) => {
-  Note.find({}).then(notes => {
-    response.json(notes)
-  })
+app.get('/api/notes', async (request, response) => {
+  const notas = await Note.find({})
+  response.json(notas)
 })
 
 app.get('/api/notes/:id', (request, response, next) => {
@@ -78,7 +77,7 @@ app.delete('/api/notes/:id', (request, response, next) => {
   })
 })
 
-app.post('/api/notes', (request, response, next) => {
+app.post('/api/notes', async (request, response, next) => {
   const note = request.body
   if (note.important === 'true') {
     note.important = true
@@ -93,11 +92,17 @@ app.post('/api/notes', (request, response, next) => {
     important: note.important
   })
 
-  newNote.save().then(savedNote => {
+  // newNote.save().then(savedNote => {
+  //   response.status(201).json(savedNote)
+  // }).catch(err => {
+  //   next(err)
+  // })
+  try {
+    const savedNote = await newNote.save()
     response.status(201).json(savedNote)
-  }).catch(err => {
-    next(err)
-  })
+  } catch (error) {
+    next(error)
+  }
 })
 
 app.use(notFound)

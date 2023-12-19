@@ -1,24 +1,7 @@
-const supertest = require('supertest')
-const { app, server } = require('../index')
+const { server } = require('../index')
 const Note = require('../models/Notes')
 const { default: mongoose } = require('mongoose')
-
-const api = supertest(app)
-
-const initialNotes = [
-  {
-    title: 'Aprendiendo fullstack',
-    important: true,
-    date: new Date(),
-    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, voluptatem ipsam consequuntur ab doloremque qui veniam ducimus quidem reprehenderit possimus necessitatibus excepturi deleniti numquam voluptas iste! Qui animi molestiae officiis.'
-  },
-  {
-    title: 'Aprendiendo astro',
-    important: true,
-    date: new Date(),
-    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, voluptatem ipsam consequuntur ab doloremque qui veniam ducimus quidem reprehenderit possimus necessitatibus excepturi deleniti numquam voluptas iste! Qui animi molestiae officiis.'
-  }
-]
+const { initialNotes, api, getAllTitlesFromNotes } = require('./helpers/helpers')
 
 beforeEach(async () => {
   await Note.deleteMany({})
@@ -48,8 +31,7 @@ test('tiene que comenzar con dos notas', async () => {
 // })
 
 test('La en alguna nota tiene que hablar sobre astro', async () => {
-  const response = await api.get('/api/notes')
-  const titles = response.body.map(note => note.title)
+  const { titles } = await getAllTitlesFromNotes()
   expect(titles).toContain('Aprendiendo astro')
 })
 
@@ -67,9 +49,20 @@ test('se valide el agregar una nueva nota', async () => {
     .expect(201)
     .expect('Content-Type', /application\/json/)
 
-  const response = await api.get('/api/notes')
-  const titles = response.body.map(note => note.title)
+  const { titles } = await getAllTitlesFromNotes()
   expect(titles).toContain(newNote.title)
+})
+
+test('a note can be delete', async () => {
+  const { response: primerResponse } = await getAllTitlesFromNotes()
+  const { body: notes } = primerResponse
+  const [noteToDelete] = notes
+  await api
+    .delete(`/api/notes/${noteToDelete.id}`)
+    .expect(204)
+
+  const { response } = await getAllTitlesFromNotes()
+  expect(response.body).toHaveLength(initialNotes.length - 1)
 })
 
 afterAll(() => {
