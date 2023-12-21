@@ -2,20 +2,21 @@ require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
-const logger = require('./loggerMiddleware')
+const usersRouter = require('./src/controllers/users')
+// const logger = require('./loggerMiddleware')
 
 // Conexión con la base de datos
 require('./mongo')
 
-const Note = require('./models/Notes')
-const notFound = require('./middleware/notFound')
-const handleErrors = require('./middleware/handleErrors')
+const Note = require('./src/models/Notes')
+const notFound = require('./src/middleware/notFound')
+const handleErrors = require('./src/middleware/handleErrors')
 
 app.use(cors())
 app.use(express.json())
 // Un middleware es una función que intercepta la petición que está atravesando tu API, permitiéndote realizar operaciones o aplicar lógica específica antes de que la solicitud alcance su destino final. Estas funciones juegan un papel crucial en la manipulación y el procesamiento de las solicitudes HTTP, ofreciendo un punto de intervención para personalizar el comportamiento de tu aplicación.
 
-app.use(logger)
+// app.use(logger)
 
 // const app = http.createServer((request, response) =>{
 //     response.writeHead(200,{'Content-Type': 'application/json'})
@@ -110,6 +111,8 @@ app.post('/api/notes', async (request, response, next) => {
     next(error)
   }
 })
+
+app.use('/api/users', usersRouter)
 
 app.use(notFound)
 app.use(handleErrors)

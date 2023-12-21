@@ -1,4 +1,4 @@
-const { palidrome } = require('../utils/for_testing')
+const { palidrome } = require('../src/utils/for_testing')
 
 test.skip('palindome of nacho', () => {
   const result = palidrome('nacho')
