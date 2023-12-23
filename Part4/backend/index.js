@@ -8,9 +8,9 @@ const usersRouter = require('./src/controllers/users')
 // Conexión con la base de datos
 require('./mongo')
 
-const Note = require('./src/models/Notes')
 const notFound = require('./src/middleware/notFound')
 const handleErrors = require('./src/middleware/handleErrors')
+const notesRouter = require('./src/controllers/notes')
 
 app.use(cors())
 app.use(express.json())
@@ -27,91 +27,7 @@ app.get('/', (request, response) => {
   response.send('<h1>Hola mundo</h1>')
 })
 
-app.get('/api/notes', async (request, response) => {
-  const notas = await Note.find({})
-  response.json(notas)
-})
-
-app.get('/api/notes/:id', (request, response, next) => {
-  const id = request.params.id
-
-  Note.findById(id).then(note => {
-    if (note) {
-      response.json(note)
-    } else {
-      response.status(404).end()
-    }
-  }).catch(err => {
-    next(err)
-  })
-})
-
-app.put('/api/notes/:id', (request, response, next) => {
-  const id = request.params.id
-  const note = request.body
-
-  const newNoteInfo = new Note({
-    title: note.title,
-    body: note.body,
-    date: new Date(),
-    important: note.important
-  })
-
-  Note.findByIdAndUpdate(id, newNoteInfo, { new: true }).then(note => {
-    if (note) {
-      response.status(200).json(note)
-    } else {
-      response.status(404).end()
-    }
-  }).catch(err => {
-    next(err)
-  })
-})
-
-app.delete('/api/notes/:id', async (request, response, next) => {
-  const id = request.params.id
-
-  // Note.findByIdAndDelete(id).then(result => {
-  //   response.status(204).end()
-  // }).catch(err => {
-  //   next(err)
-  // })
-  try {
-    await Note.findByIdAndDelete(id)
-    response.status(204).end()
-  } catch (err) {
-    next(err)
-  }
-})
-
-app.post('/api/notes', async (request, response, next) => {
-  const note = request.body
-  if (note.important === 'true') {
-    note.important = true
-  } else {
-    note.important = false
-  }
-
-  const newNote = new Note({
-    title: note.title,
-    body: note.body,
-    date: new Date(),
-    important: note.important
-  })
-
-  // newNote.save().then(savedNote => {
-  //   response.status(201).json(savedNote)
-  // }).catch(err => {
-  //   next(err)
-  // })
-  try {
-    const savedNote = await newNote.save()
-    response.status(201).json(savedNote)
-  } catch (error) {
-    next(error)
-  }
-})
-
+app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
 
 app.use(notFound)

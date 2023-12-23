@@ -1,5 +1,4 @@
 const usersRouter = require('express').Router()
-const { response } = require('express')
 const User = require('../models/User')
 
 usersRouter.post('/', async (req, res) => {
@@ -13,7 +12,7 @@ usersRouter.post('/', async (req, res) => {
   })
 
   const savedUser = await user.save()
-  response.json(savedUser)
+  res.json(savedUser)
 })
 
 module.exports = usersRouter
