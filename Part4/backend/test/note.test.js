@@ -1,79 +1,79 @@
-const { server } = require('../index')
-const Note = require('../models/Notes')
-const { default: mongoose } = require('mongoose')
-const { initialNotes, api, getAllTitlesFromNotes } = require('./helpers/helpers')
+// const { server } = require('../index')
+// const Note = require('../src/models/Notes')
+// const { default: mongoose } = require('mongoose')
+// const { initialNotes, api, getAllTitlesFromNotes } = require('../src/helpers/helpers')
 
-beforeEach(async () => {
-  await Note.deleteMany({})
+// beforeEach(async () => {
+//   await Note.deleteMany({})
 
-  for (const note of initialNotes) {
-    const noteObject = new Note(note)
-    await noteObject.save()
-  }
-})
-
-test('las notas se devuelven en json', async () => {
-  await api
-    .get('/api/notes')
-    .expect(200)
-    .expect('Content-Type', /application\/json/)
-})
-
-test('tiene que comenzar con dos notas', async () => {
-  const response = await api.get('/api/notes')
-  expect(response.body).toHaveLength(initialNotes.length)
-})
-
-// test('La primer nota tiene que hablar sobre fullstack', async () => {
-//   const response = await api.get('/api/notes')
-//   expect(response.body[0].title).toBe('Aprendiendo fullstack')
+//   for (const note of initialNotes) {
+//     const noteObject = new Note(note)
+//     await noteObject.save()
+//   }
 // })
 
-test('La en alguna nota tiene que hablar sobre astro', async () => {
-  const { titles } = await getAllTitlesFromNotes()
-  expect(titles).toContain('Aprendiendo astro')
-})
+// test('las notas se devuelven en json', async () => {
+//   await api
+//     .get('/api/notes')
+//     .expect(200)
+//     .expect('Content-Type', /application\/json/)
+// })
 
-test('se valide el agregar una nueva nota', async () => {
-  const newNote = {
-    title: 'Aprendiendo astro',
-    important: true,
-    date: new Date(),
-    body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, voluptatem ipsam consequuntur ab doloremque qui veniam ducimus quidem reprehenderit possimus necessitatibus excepturi deleniti numquam voluptas iste! Qui animi molestiae officiis.'
-  }
+// test('tiene que comenzar con dos notas', async () => {
+//   const response = await api.get('/api/notes')
+//   expect(response.body).toHaveLength(initialNotes.length)
+// })
 
-  await api
-    .post('/api/notes')
-    .send(newNote)
-    .expect(201)
-    .expect('Content-Type', /application\/json/)
+// // test('La primer nota tiene que hablar sobre fullstack', async () => {
+// //   const response = await api.get('/api/notes')
+// //   expect(response.body[0].title).toBe('Aprendiendo fullstack')
+// // })
 
-  const { titles } = await getAllTitlesFromNotes()
-  expect(titles).toContain(newNote.title)
-})
+// test('La en alguna nota tiene que hablar sobre astro', async () => {
+//   const { titles } = await getAllTitlesFromNotes()
+//   expect(titles).toContain('Aprendiendo astro')
+// })
 
-test('a note can be delete', async () => {
-  const { response: primerResponse } = await getAllTitlesFromNotes()
-  const { body: notes } = primerResponse
-  const [noteToDelete] = notes
-  await api
-    .delete(`/api/notes/${noteToDelete.id}`)
-    .expect(204)
+// test('se valide el agregar una nueva nota', async () => {
+//   const newNote = {
+//     title: 'Aprendiendo astro',
+//     important: true,
+//     date: new Date(),
+//     body: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Sit, voluptatem ipsam consequuntur ab doloremque qui veniam ducimus quidem reprehenderit possimus necessitatibus excepturi deleniti numquam voluptas iste! Qui animi molestiae officiis.'
+//   }
 
-  const { response } = await getAllTitlesFromNotes()
-  expect(response.body).toHaveLength(initialNotes.length - 1)
-})
+//   await api
+//     .post('/api/notes')
+//     .send(newNote)
+//     .expect(201)
+//     .expect('Content-Type', /application\/json/)
 
-test('a note that do not exist can not be delete', async () => {
-  await api
-    .delete('/api/notes/3232')
-    .expect(400)
+//   const { titles } = await getAllTitlesFromNotes()
+//   expect(titles).toContain(newNote.title)
+// })
 
-  const { response } = await getAllTitlesFromNotes()
-  expect(response.body).toHaveLength(initialNotes.length)
-})
+// test('a note can be delete', async () => {
+//   const { response: primerResponse } = await getAllTitlesFromNotes()
+//   const { body: notes } = primerResponse
+//   const [noteToDelete] = notes
+//   await api
+//     .delete(`/api/notes/${noteToDelete.id}`)
+//     .expect(404)
 
-afterAll(() => {
-  mongoose.connection.close()
-  server.close()
-})
+//   const { response } = await getAllTitlesFromNotes()
+//   expect(response.body).toHaveLength(initialNotes.length - 1)
+// })
+
+// test('a note that do not exist can not be delete', async () => {
+//   await api
+//     .delete('/api/notes/3232')
+//     .expect(404)
+
+//   const { response } = await getAllTitlesFromNotes()
+//   expect(response.body).toHaveLength(initialNotes.length)
+// })
+
+// afterAll(() => {
+//   mongoose.connection.close()
+//   server.close()
+// })

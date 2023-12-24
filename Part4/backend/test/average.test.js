@@ -1,4 +1,4 @@
-const { average } = require('../utils/for_testing')
+const { average } = require('../src/utils/for_testing')
 
 describe.skip('average', () => {
   test('Cuando le mandamos un valor, deberia ser ese valor', () => {
