@@ -1,5 +1,6 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/Notes')
+const User = require('../models/User')
 
 notesRouter.get('/', async (request, response) => {
   const notas = await Note.find({})
@@ -59,18 +60,23 @@ notesRouter.delete(':id', async (request, response, next) => {
 })
 
 notesRouter.post('/', async (request, response, next) => {
-  const note = request.body
-  if (note.important === 'true') {
-    note.important = true
+  let { title, body, important, userId } = request.body
+
+  if (important === 'true') {
+    important = true
   } else {
-    note.important = false
+    important = false
   }
 
+  // Vamos a recuperar al usuario
+  const user = await User.findById(userId)
+
   const newNote = new Note({
-    title: note.title,
-    body: note.body,
+    title: title,
+    body: body,
     date: new Date(),
-    important: note.important
+    important: important,
+    user: user._id
   })
 
   // newNote.save().then(savedNote => {
@@ -80,6 +86,8 @@ notesRouter.post('/', async (request, response, next) => {
   // })
   try {
     const savedNote = await newNote.save()
+    user.notes = user.notes.concat(savedNote._id)
+    await user.save()
     response.status(201).json(savedNote)
   } catch (error) {
     next(error)
