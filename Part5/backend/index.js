@@ -11,6 +11,7 @@ require('./mongo')
 const notFound = require('./src/middleware/notFound')
 const handleErrors = require('./src/middleware/handleErrors')
 const notesRouter = require('./src/controllers/notes')
+const loginRouter = require('./src/controllers/login')
 
 app.use(cors())
 app.use(express.json())
@@ -29,6 +30,7 @@ app.get('/', (request, response) => {
 
 app.use('/api/notes', notesRouter)
 app.use('/api/users', usersRouter)
+app.use('/login', loginRouter)
 
 app.use(notFound)
 app.use(handleErrors)
