@@ -1,6 +1,7 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/Notes')
 const User = require('../models/User')
+const jwt = require('jsonwebtoken')
 
 notesRouter.get('/', async (request, response) => {
   const notas = await Note.find({}).populate('user', {
@@ -46,22 +47,6 @@ notesRouter.put('/:id', (request, response, next) => {
   })
 })
 
-notesRouter.delete(':id', async (request, response, next) => {
-  const id = request.params.id
-
-  // Note.findByIdAndDelete(id).then(result => {
-  //   response.status(204).end()
-  // }).catch(err => {
-  //   next(err)
-  // })
-  try {
-    await Note.findByIdAndDelete(id)
-    response.status(204).end()
-  } catch (err) {
-    next(err)
-  }
-})
-
 notesRouter.post('/', async (request, response, next) => {
   let { title, body, important, userId } = request.body
 
@@ -69,6 +54,31 @@ notesRouter.post('/', async (request, response, next) => {
     important = true
   } else {
     important = false
+  }
+
+  const authorization = request.get('authorization')
+
+  let token = ''
+
+  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
+    token = authorization.substring(7)
+  }
+
+  let decodedToken = {}
+
+  try {
+    decodedToken = jwt.verify(token, process.env.SECRET)
+    // Resto del código
+  } catch (error) {
+    return response.status(401).json({
+      error: 'Token inválido o no proporcionado'
+    })
+  }
+
+  if (!token || !decodedToken.id) {
+    return response.status(401).json({
+      error: 'token es invalido o no existe'
+    })
   }
 
   // Vamos a recuperar al usuario
@@ -94,6 +104,22 @@ notesRouter.post('/', async (request, response, next) => {
     response.status(201).json(savedNote)
   } catch (error) {
     next(error)
+  }
+})
+
+notesRouter.delete(':id', async (request, response, next) => {
+  const id = request.params.id
+
+  // Note.findByIdAndDelete(id).then(result => {
+  //   response.status(204).end()
+  // }).catch(err => {
+  //   next(err)
+  // })
+  try {
+    await Note.findByIdAndDelete(id)
+    response.status(204).end()
+  } catch (err) {
+    next(err)
   }
 })
 
