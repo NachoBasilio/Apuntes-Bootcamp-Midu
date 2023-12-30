@@ -12,6 +12,11 @@ loginRouter.post('/', async (req, res) => {
       error: 'invalid user or password'
     })
   }
+
+  res.send({
+    name: user.name,
+    username: user.username
+  })
 })
 
 module.exports = loginRouter
