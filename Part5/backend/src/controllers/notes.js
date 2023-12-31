@@ -48,7 +48,7 @@ notesRouter.put('/:id', (request, response, next) => {
 })
 
 notesRouter.post('/', async (request, response, next) => {
-  let { title, body, important, userId } = request.body
+  let { title, body, important } = request.body
 
   if (important === 'true') {
     important = true
@@ -75,21 +75,15 @@ notesRouter.post('/', async (request, response, next) => {
     })
   }
 
-  if (!token || !decodedToken.id) {
-    return response.status(401).json({
-      error: 'token es invalido o no existe'
-    })
-  }
-
   // Vamos a recuperar al usuario
+  const { id: userId } = decodedToken
   const user = await User.findById(userId)
-
   const newNote = new Note({
     title: title,
     body: body,
     date: new Date(),
     important: important,
-    user: user._id
+    user: userId
   })
 
   // newNote.save().then(savedNote => {
