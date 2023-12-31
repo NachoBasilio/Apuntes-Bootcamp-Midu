@@ -1,12 +1,12 @@
 const notesRouter = require('express').Router()
 const Note = require('../models/Notes')
 const User = require('../models/User')
-const jwt = require('jsonwebtoken')
+const userExtractor = require('../middleware/UserExtractor')
 
 notesRouter.get('/', async (request, response) => {
-  const notas = await Note.find({}).populate('user', {
-    username: 1,
-    name: 1
+  const notas = await Note.find({}).populate({
+    path: 'user',
+    select: 'username name'
   })
   response.json(notas)
 })
@@ -25,7 +25,7 @@ notesRouter.get('/:id', (request, response, next) => {
   })
 })
 
-notesRouter.put('/:id', (request, response, next) => {
+notesRouter.put('/:id', userExtractor, (request, response, next) => {
   const id = request.params.id
   const note = request.body
 
@@ -47,43 +47,27 @@ notesRouter.put('/:id', (request, response, next) => {
   })
 })
 
-notesRouter.post('/', async (request, response, next) => {
+notesRouter.post('/', userExtractor, async (request, response, next) => {
   let { title, body, important } = request.body
-
+  const { userId } = request
   if (important === 'true') {
     important = true
   } else {
     important = false
   }
 
-  const authorization = request.get('authorization')
-
-  let token = ''
-
-  if (authorization && authorization.toLowerCase().startsWith('bearer')) {
-    token = authorization.substring(7)
-  }
-
-  let decodedToken = {}
-
-  try {
-    decodedToken = jwt.verify(token, process.env.SECRET)
-    // Resto del código
-  } catch (error) {
-    return response.status(401).json({
-      error: 'Token inválido o no proporcionado'
-    })
-  }
-
-  // Vamos a recuperar al usuario
-  const { id: userId } = decodedToken
   const user = await User.findById(userId)
+
+  if (!user) {
+    return response.status(404).json({ error: 'Usuario no encontrado' })
+  }
+
   const newNote = new Note({
     title: title,
     body: body,
     date: new Date(),
     important: important,
-    user: userId
+    user: user._id.toString()
   })
 
   // newNote.save().then(savedNote => {
@@ -101,7 +85,7 @@ notesRouter.post('/', async (request, response, next) => {
   }
 })
 
-notesRouter.delete(':id', async (request, response, next) => {
+notesRouter.delete(':id', userExtractor, async (request, response, next) => {
   const id = request.params.id
 
   // Note.findByIdAndDelete(id).then(result => {
